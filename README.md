@@ -1,1 +1,2 @@
-# Etkinlik Yönetim Sistemi
+# 🧠Etkinlik Yönetim Sistemi 
+ 
