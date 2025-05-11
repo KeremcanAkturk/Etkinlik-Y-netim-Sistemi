@@ -1,4 +1,4 @@
-## 🧠Etkinlik Yönetim Sistemi 
+# 🧠Etkinlik Yönetim Sistemi 
  📜Bu proje, Python ve Tkinter kullanılarak geliştirilmiş basit bir *Etkinlik,Bilet Uygulamasıdır*.
  💪Kullanışlı ve basit yapısı bulunan ana menüsü ile işlemler hızlı ve okunaklı bir şekilde yapılmasını sağlar. 
 
