@@ -1,0 +1,140 @@
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+import re
+
+class Etkinlik:
+    def __init__(self, ad, tarih, kapasite):
+        self.ad = ad
+        self.tarih = tarih
+        self.kapasite = kapasite
+        self.kalan_kapasite = kapasite
+        self.katilimcilar = []
+
+    def bilet_sat(self, katilimci):
+        if self.kalan_kapasite > 0:
+            bilet = Bilet(self, katilimci)
+            self.katilimcilar.append(katilimci)
+            katilimci.bilet = bilet
+            self.kalan_kapasite -= 1
+            return f"{katilimci.isim} için bilet oluşturuldu."
+        else:
+            return "Etkinlik dolu!"
+
+    def bilet_iptal(self, katilimci):
+        if katilimci in self.katilimcilar:
+            self.katilimcilar.remove(katilimci)
+            self.kalan_kapasite += 1
+
+class Katilimci:
+    def __init__(self, isim, email):
+        self.isim = isim
+        self.email = email
+        self.bilet = None
+
+class Bilet:
+    def __init__(self, etkinlik, katilimci):
+        self.etkinlik = etkinlik
+        self.katilimci = katilimci
+
+etkinlikler = [Etkinlik("Teknoloji Zirvesi", "15/06/2025", 3), Etkinlik("Müzik Festivali", "22/06/2025", 2)]
+katilimcilar = []
+
+def etkinlik_listesi():
+    return [f"{e.ad} - {e.tarih} (Kapasite: {e.kapasite}, Kalan: {e.kalan_kapasite}, Katılımcı: {len(e.katilimcilar)})" for e in etkinlikler]
+
+def katilimci_ekle_gui():
+    isim = simpledialog.askstring("Katılımcı Ekle", "İsim:")
+    email = simpledialog.askstring("Katılımcı Ekle", "E-posta:")
+    if isim and email:
+        katilimci = Katilimci(isim, email)
+        katilimcilar.append(katilimci)
+        messagebox.showinfo("Başarılı", f"{isim} kaydedildi.")
+
+def bilet_al_gui():
+    isim = simpledialog.askstring("Bilet Al", "İsim:")
+    email = simpledialog.askstring("Bilet Al", "E-posta:")
+    katilimci = next((k for k in katilimcilar if k.isim == isim and k.email == email), None)
+
+    if not katilimci:
+        messagebox.showerror("Hata", "Katılımcı bulunamadı!")
+        return
+
+    secenekler = [e.ad for e in etkinlikler]
+    secim = simpledialog.askstring("Etkinlik Seç", f"Etkinlik seçin:\n{chr(10).join([f'{i+1}. {secenekler[i]}' for i in range(len(secenekler))])}")
+    if secim and secim.isdigit():
+        idx = int(secim) - 1
+        if 0 <= idx < len(etkinlikler):
+            sonuc = etkinlikler[idx].bilet_sat(katilimci)
+            messagebox.showinfo("Sonuç", sonuc)
+            guncelle_liste()
+        else:
+            messagebox.showerror("Hata", "Geçersiz seçim!")
+
+def bilet_iptal_gui():
+    isim = simpledialog.askstring("Bilet İptal", "İsim:")
+    email = simpledialog.askstring("Bilet İptal", "E-posta:")
+    katilimci = next((k for k in katilimcilar if k.isim == isim and k.email == email), None)
+
+    if not katilimci or not katilimci.bilet:
+        messagebox.showerror("Hata", "Bilet bulunamadı!")
+        return
+
+    etkinlik = katilimci.bilet.etkinlik
+    etkinlik.bilet_iptal(katilimci)
+    katilimci.bilet = None
+    messagebox.showinfo("Başarılı", "Bilet iptal edildi.")
+    guncelle_liste()
+
+def etkinlik_ekle_gui():
+    ad = simpledialog.askstring("Etkinlik Ekle", "Etkinlik adı:")
+    tarih = simpledialog.askstring("Etkinlik Ekle", "Tarih (GG/AA/YYYY):")
+    kapasite = simpledialog.askinteger("Etkinlik Ekle", "Kapasite:")
+
+    if ad and tarih and kapasite:
+        match = re.match(r"(\d{2})/(\d{2})/(\d{4})", tarih)
+        if match:
+            gun, ay, yil = map(int, match.groups())
+            if 1 <= ay <= 12:
+                etkinlik = Etkinlik(ad, tarih, kapasite)
+                etkinlikler.append(etkinlik)
+                messagebox.showinfo("Başarılı", f"{ad} eklendi.")
+            else:
+                messagebox.showerror("Hata", "Geçersiz ay! Lütfen 1 ile 12 arasında bir ay girin.")
+        else:
+            messagebox.showerror("Hata", "Tarih formatı geçersiz! GG/AA/YYYY formatında giriniz.")
+
+def guncelle_liste():
+    liste.delete(0, tk.END)
+    for e in etkinlik_listesi():
+        liste.insert(tk.END, e)
+
+pencere = tk.Tk()
+pencere.title("Etkinlik Yönetim Sistemi")
+pencere.geometry("500x400")
+
+frame = tk.Frame(pencere)
+frame.pack(pady=10)
+
+liste = tk.Listbox(frame, width=70)
+liste.pack()
+guncelle_liste()
+
+btn_frame = tk.Frame(pencere)
+btn_frame.pack(pady=10)
+
+btn1 = tk.Button(btn_frame, text="Katılımcı Ekle", command=katilimci_ekle_gui)
+btn1.grid(row=0, column=0, padx=5)
+
+btn2 = tk.Button(btn_frame, text="Bilet Al", command=bilet_al_gui)
+btn2.grid(row=0, column=1, padx=5)
+
+btn3 = tk.Button(btn_frame, text="Bilet İptal", command=bilet_iptal_gui)
+btn3.grid(row=0, column=2, padx=5)
+
+btn4 = tk.Button(btn_frame, text="Etkinlik Ekle", command=lambda: [etkinlik_ekle_gui(), guncelle_liste()])
+btn4.grid(row=0, column=3, padx=5)
+
+btn5 = tk.Button(pencere, text="Kapat", command=pencere.quit)
+btn5.pack(pady=10)
+
+pencere.mainloop()
