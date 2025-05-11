@@ -19,7 +19,7 @@
 
 
 ## 👨🏻‍💻 kurulum
-Öncelikle Microsoft store üzerinden visual studio code indiriyoruz (Taratıcınzdanda visual studio code indire bilirsiniz)
+Öncelikle Microsoft store üzerinden visual studio code indiriyoruz (Taratıcınzdanda visual studio code indirebilirsiniz)
 ![image](https://github.com/user-attachments/assets/7615dee7-7dc9-44eb-9e60-98eedba9404c)
 
 
