@@ -16,3 +16,8 @@
 -⚙tkinter.messagebox: Hata mesajları veya bilgilendirme mesajları gibi standart iletişim kutularını göstermek için kullanılan Tkinter modülüdür.
 -⚙tkinter.simpledialog: Kullanıcıdan metin veya sayı gibi basit girdiler almak için kullanılan Tkinter modülüdür.
 -⚙re (Regular Expression): Tarih formatını doğrulamak için kullanılan Python'ın düzenli ifadeler (regex) kütüphanesidir.
+
+
+## 👨🏻‍💻 kurulum
+Öncelikle Microsoft store üzerinden visual studio code indiriyoruz (Taratıcınzdanda visual studio code indire bilirsiniz)
+![image](https://github.com/user-attachments/assets/7615dee7-7dc9-44eb-9e60-98eedba9404c)
